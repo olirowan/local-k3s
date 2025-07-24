@@ -1,0 +1,12 @@
+---
+
+- include_tasks: base.yml
+
+- include_tasks: ssh.yml
+
+- include_tasks: sudo.yml
+  with_items: "{{ nopasswd_user }}"
+  loop_control:
+    loop_var: nopasswd_user
+  when: nopasswd_user is defined
+

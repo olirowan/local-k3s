@@ -1,0 +1,30 @@
+---
+
+ansible_user: vagrant
+
+
+# user config
+server_user_name: "{{ lookup('env', 'SERVER_USER_NAME', default='oli') }}"
+server_user_password_hash: "{{ lookup('env', 'SERVER_USER_PASSWORD_HASH') | default(omit) }}"
+ssh_public_keys: "{{ lookup('env', 'SSH_PUBLIC_KEYS', default='~/.ssh/id_rsa.pub') }}"
+nopasswd_user: "{{ lookup('env', 'NOPASSWD_USER', default='oli') }}"
+
+
+# system config
+server_locales:
+  - en_GB.UTF-8
+
+
+# add packages as needed
+required_packages:
+  - vim
+  - git
+  - tree
+
+
+# k3s config
+k3s_version: v1.33.1+k3s1
+systemd_dir: /etc/systemd/system
+control_plane_ip: "192.168.56.101"
+extra_server_args: ""
+extra_agent_args: "" 

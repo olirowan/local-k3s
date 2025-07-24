@@ -1,0 +1,26 @@
+---
+
+- name: Enable IPv4 forwarding
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    reload: yes
+
+
+- name: Enable IPv6 forwarding
+  ansible.builtin.sysctl:
+    name: net.ipv6.conf.all.forwarding
+    value: "1"
+    state: present
+    reload: yes
+
+
+- name: Install nfs-commons
+  ansible.builtin.apt:
+    name: nfs-common
+
+
+- name: Install open-iscsi (Longhorn)
+  ansible.builtin.apt:
+    name: open-iscsi

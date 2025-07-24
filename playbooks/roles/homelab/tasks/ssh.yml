@@ -1,0 +1,44 @@
+---
+
+- name: Add user keys
+  ansible.posix.authorized_key:
+    user: "{{ server_user_name }}"
+    key: "{{ lookup('file', item) }}"
+  loop:
+    - "{{ ssh_public_keys }}"
+
+
+- name: Disallow root SSH access
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify: Restart ssh
+
+
+- name: Disallow password auth
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify: Restart ssh
+
+
+- name: Add SSH banner
+  ansible.builtin.template:
+    src: ssh/banner.j2
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: '0644'
+
+
+- name: Enable SSH banner
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?Banner"
+    line: "Banner /etc/issue.net"
+    state: present
+  notify: Restart ssh

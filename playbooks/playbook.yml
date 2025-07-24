@@ -1,0 +1,38 @@
+---
+
+- hosts: all
+
+  become: yes
+  gather_facts: yes
+  tags: ["homelab", "k3s"]
+
+  roles:
+    - role: homelab
+
+
+- hosts: control_plane
+
+  become: yes
+  tags: ["k3s"]
+
+  roles:
+    - role: k3s/setup
+    - role: k3s/control_plane
+
+
+- hosts: worker
+
+  become: yes
+  tags: ["k3s"]
+
+  roles:
+    - role: k3s/setup
+    - role: k3s/worker
+
+  pre_tasks:
+    - name: Wait for control plane k3s to be ready
+      ansible.builtin.wait_for:
+        host: "{{ control_plane_ip }}"
+        port: 6443
+        delay: 10
+        timeout: 300

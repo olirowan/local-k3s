@@ -1,0 +1,46 @@
+---
+
+- name: Update APT package cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+
+- name: Set locale
+  ansible.builtin.locale_gen:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ server_locales }}"
+  register: update_locale
+
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ required_packages }}"
+
+
+- name: Create new server owner
+  ansible.builtin.user:
+    name: "{{ server_user_name }}"
+    password: "{{ server_user_password_hash | default(omit) }}"
+    shell: /bin/bash
+    append: yes
+    state: present
+  when: server_user_password_hash is defined
+
+
+- name: Set vim as default editor
+  ansible.builtin.alternatives:
+    name: "{{ item }}"
+    path: /usr/bin/vim.basic
+  loop:
+    - editor
+    - ex
+    - rview
+    - rvim
+    - vi
+    - view
+    - vim
+    - vimdiff
