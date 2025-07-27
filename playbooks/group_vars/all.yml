@@ -26,5 +26,10 @@ required_packages:
 k3s_version: v1.33.1+k3s1
 systemd_dir: /etc/systemd/system
 control_plane_ip: "192.168.56.101"
-extra_server_args: ""
-extra_agent_args: "" 
+
+flannel_interface: enp0s8
+flannel_network: 10.42.0.0/16
+flannel_service_cidr: 10.43.0.0/16
+
+extra_server_args: "--flannel-backend=vxlan --flannel-external-ip --cluster-cidr={{ flannel_network }} --service-cidr={{ flannel_service_cidr }}"
+extra_agent_args: ""

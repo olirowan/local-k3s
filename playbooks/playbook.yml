@@ -18,6 +18,7 @@
   roles:
     - role: k3s/setup
     - role: k3s/control_plane
+    - role: k3s/networking
 
 
 - hosts: worker

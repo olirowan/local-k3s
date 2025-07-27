@@ -29,7 +29,8 @@ Vagrant.configure("2") do |config|
 
                     ansible.extra_vars = {
 
-                        server_host_name: "{{ inventory_hostname }}"
+                        server_host_name: "{{ inventory_hostname }}",
+                        node_ip: "192.168.56.{{ inventory_hostname | regex_replace('local-kube-', '') }}"
                     }
 
                     ansible.groups = {

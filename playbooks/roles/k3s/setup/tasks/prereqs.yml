@@ -24,3 +24,8 @@
 - name: Install open-iscsi (Longhorn)
   ansible.builtin.apt:
     name: open-iscsi
+
+- name: Set vagrant shell as bash 
+  user:
+    name: vagrant
+    shell: /bin/bash
